@@ -1,0 +1,37 @@
+.profile{
+    max-width: 1000px;
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    h2{
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 16px;
+    }
+    button {
+        font-weight: 600;
+    }
+    .profile-inputs {
+        padding: 25px 10px 25px 15px;
+        border: 1px solid #F3F3F3;
+        box-sizing: border-box;
+        border-radius: 8px;
+    }
+    .form-control {
+        width: 410px;
+        height: 30px;
+        background-color: white;
+    }
+    .comment-form {
+        height: 100px;
+        width: 100%;
+    
+    }
+    .button-edit{
+        margin-right: 0;
+        margin-left: auto;
+    }
+}
+
