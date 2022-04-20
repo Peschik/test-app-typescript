@@ -40,7 +40,7 @@ const AppSorters: FC<AppSorterProps> = ({ onSortSelect }) => {
           <img
             className="button__home animated"
             src={goHome}
-            alt="Wanna go home?"
+            alt="Want to go to the main page?"
           />
         </Link>
       </div>

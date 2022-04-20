@@ -22,7 +22,10 @@ const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
 
   if (edit) {
     inputRef.current?.removeAttribute("disabled");
+    inputRef.current?.classList.add("input-form");
   }
+  const inputClassName =
+    meta.touched && meta.error ? "form-control error" : "form-control";
   return (
     <>
       <label className="form-label mt-3" htmlFor={props.name}>
@@ -33,9 +36,7 @@ const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
         disabled
         {...props}
         {...field}
-        className={
-          meta.touched && meta.error ? "form-control error" : "form-control"
-        }
+        className={inputClassName}
       />
       {meta.touched && meta.error ? <div>{meta.error}</div> : null}
     </>
@@ -49,10 +50,27 @@ const FormUser: FC = () => {
   const btnRef = useRef<HTMLButtonElement>();
   if (edit) {
     btnRef.current?.removeAttribute("disabled");
+    btnRef.current?.classList.add("btn_ready");
   }
 
   const userPropsArray = Object.entries(currentUser);
   const userDataArray = Object.keys(currentUser);
+
+  const renderItems = (arr: string[]) => {
+    return arr.map((item) => {
+      if (item === "id") return;
+      return (
+        <MyTextInput
+          key={item + "Input"}
+          label={item.slice(0, 1).toUpperCase() + item.slice(1)}
+          name={item}
+          type={item !== "email" ? "text" : "email"}
+        />
+      );
+    });
+  };
+
+  const elements = renderItems(userDataArray);
 
   return (
     <Formik
@@ -87,17 +105,7 @@ const FormUser: FC = () => {
       onSubmit={(values) => console.log(JSON.stringify(values, null, 2))}
     >
       <Form className="form">
-        {userDataArray.map((item) => {
-          if (item === "id") return;
-          return (
-            <MyTextInput
-              key={item + "Input"}
-              label={item.slice(0, 1).toUpperCase() + item.slice(1)}
-              name={item}
-              type={item !== "email" ? "text" : "email"}
-            />
-          );
-        })}
+        {elements}
         <label htmlFor="text" className={"form-label mt-3"}>
           Ваше сообщение
         </label>
