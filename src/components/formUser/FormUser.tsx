@@ -1,26 +1,36 @@
 import { Formik, Form, Field, ErrorMessage, useField } from "formik";
 import * as Yup from "yup";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { Button } from "react-bootstrap";
 import "./formUser.scss";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { EditContext } from "../contexts/EditContext";
 
 interface MyTextInputProps {
   name: string;
   label: string;
-  disabled?: boolean;
-  id: string;
   type: string;
+  key: string;
 }
+
 const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
+  const edit = useContext(EditContext);
   const [field, meta] = useField(props);
+
+  const inputRef = useRef<HTMLInputElement>();
+
+  if (edit) {
+    inputRef.current?.removeAttribute("disabled");
+  }
   return (
     <>
       <label className="form-label mt-3" htmlFor={props.name}>
         {label}
       </label>
       <input
+        ref={inputRef}
+        disabled
         {...props}
         {...field}
         className={
@@ -33,26 +43,23 @@ const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
 };
 
 const FormUser: FC = () => {
+  const edit = useContext(EditContext);
   const currentUser = useContext(UserContext);
-  const { name, username, email, street, city, zipcode, phone, website, id } =
-    currentUser;
-  const userPropsArray = [];
-  for (let prop in currentUser) {
-    userPropsArray.push(prop);
+
+  const btnRef = useRef<HTMLButtonElement>();
+  if (edit) {
+    btnRef.current?.removeAttribute("disabled");
   }
+
+  const userPropsArray = Object.entries(currentUser);
+  const userDataArray = Object.keys(currentUser);
 
   return (
     <Formik
-      initialValues={{
-        name: `${name}`,
-        username: `${username}`,
-        email: `${email}`,
-        street: `${street}`,
-        city: `${city}`,
-        zipcode: `${zipcode}`,
-        phone: `${phone}`,
-        website: `${website}`,
-      }}
+      initialValues={userPropsArray.reduce((object, [property, value]) => {
+        object[property] = value;
+        return object;
+      }, {})}
       validationSchema={Yup.object({
         name: Yup.string()
           .min(2, "Минимум 2 символа")
@@ -80,51 +87,17 @@ const FormUser: FC = () => {
       onSubmit={(values) => console.log(JSON.stringify(values, null, 2))}
     >
       <Form className="form">
-        <MyTextInput label="Имя" id="name" name="name" type="text" disabled />
-        <MyTextInput
-          label="User name"
-          id="username"
-          name="username"
-          type="text"
-          disabled
-        />
-
-        <MyTextInput
-          label="E-mail"
-          id="email"
-          name="email"
-          type="email"
-          disabled
-        />
-        <MyTextInput
-          label="Street"
-          id="street"
-          name="street"
-          type="text"
-          disabled
-        />
-        <MyTextInput label="City" id="city" name="city" type="city" disabled />
-        <MyTextInput
-          label="Zipcode"
-          id="zipcode"
-          name="zipcode"
-          type="text"
-          disabled
-        />
-        <MyTextInput
-          label="Phone"
-          id="phone"
-          name="phone"
-          type="text"
-          disabled
-        />
-        <MyTextInput
-          label="Website"
-          id="website"
-          name="website"
-          type="text"
-          disabled
-        />
+        {userDataArray.map((item) => {
+          if (item === "id") return;
+          return (
+            <MyTextInput
+              key={item + "Input"}
+              label={item.slice(0, 1).toUpperCase() + item.slice(1)}
+              name={item}
+              type={item !== "email" ? "text" : "email"}
+            />
+          );
+        })}
         <label htmlFor="text" className={"form-label mt-3"}>
           Ваше сообщение
         </label>
@@ -135,7 +108,13 @@ const FormUser: FC = () => {
           className="form-control textarea"
         />
         <div className="d-flex justify-content-end mt-4">
-          <Button className="button-edit" variant="secondary">
+          <Button
+            ref={btnRef}
+            className="button-edit"
+            type="submit"
+            disabled
+            variant="secondary"
+          >
             Отправить
           </Button>
         </div>

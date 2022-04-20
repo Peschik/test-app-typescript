@@ -1,11 +1,11 @@
-import "./AppFilters.scss";
+import "./appSorters.scss";
 import { Button } from "react-bootstrap";
 import goHome from "../../img/home-button.png";
 import { Link } from "react-router-dom";
 import { FC } from "react";
 import { IButton } from "../../types/types";
-
-interface AppFilterProps {
+import { Col } from "react-bootstrap";
+interface AppSorterProps {
   onSortSelect: (sortName: string) => void;
 }
 const buttons: IButton[] = [
@@ -13,7 +13,7 @@ const buttons: IButton[] = [
   { name: "company", label: "По компании" },
 ];
 
-const AppFilters: FC<AppFilterProps> = ({ onSortSelect }) => {
+const AppSorters: FC<AppSorterProps> = ({ onSortSelect }) => {
   const renderItems = (arr: IButton[]) => {
     return arr.map((item: IButton, index) => {
       const { name, label } = item;
@@ -32,17 +32,19 @@ const AppFilters: FC<AppFilterProps> = ({ onSortSelect }) => {
   };
   const elements = renderItems(buttons);
   return (
-    <div className="side">
-      <span>Сортировка</span>
-      {elements}
-      <Link to="/">
-        <img
-          className="button__home animated"
-          src={goHome}
-          alt="Wanna go home?"
-        />
-      </Link>
-    </div>
+    <Col sm={4} md={2} lg={2}>
+      <div className="side__panel">
+        <span>Сортировка</span>
+        {elements}
+        <Link to="/">
+          <img
+            className="button__home animated"
+            src={goHome}
+            alt="Wanna go home?"
+          />
+        </Link>
+      </div>
+    </Col>
   );
 };
-export default AppFilters;
+export default AppSorters;

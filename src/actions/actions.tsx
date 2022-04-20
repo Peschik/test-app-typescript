@@ -2,6 +2,7 @@ import {
   GET_ALL_USERS,
   SET_ACTIVE_SORT,
   SET_ACTIVE_ID,
+  EDIT_USER,
 } from "../reducers/UsersReducer";
 import { IUser } from "../types/types";
 
@@ -21,5 +22,11 @@ export const setActiveId = (activeId: number) => {
   return {
     type: SET_ACTIVE_ID,
     payload: activeId,
+  };
+};
+export const editUser = (editUser: boolean) => {
+  return {
+    type: EDIT_USER,
+    payload: editUser,
   };
 };
