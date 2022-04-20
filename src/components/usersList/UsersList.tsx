@@ -2,17 +2,27 @@ import "./usersList.scss";
 import UserItem from "../userItem/UserItem";
 import { useContext } from "react";
 import { AllUsersContext } from "../contexts/AllUsersContext";
+import { IUserCard } from "../../types/types";
 
 const UsersList = ({ onMoreSelect }) => {
-  const gotUsersList = useContext(AllUsersContext);
-  function renderItems(arr) {
+  const gotUsersList: IUserCard[] = useContext(AllUsersContext).map(
+    ({ name, city, company, id }) => {
+      return {
+        name,
+        city,
+        company,
+        id,
+      };
+    }
+  );
+  function renderItems(arr: IUserCard[]) {
     const items = arr.map((item) => {
-      const { id, ...itemProps } = item;
+      const { id } = item;
       return (
         <UserItem
           key={id}
           onMoreSelect={() => onMoreSelect(id)}
-          {...itemProps}
+          userProps={item}
         />
       );
     });

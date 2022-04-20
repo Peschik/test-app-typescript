@@ -36,6 +36,11 @@ const FormUser: FC = () => {
   const currentUser = useContext(UserContext);
   const { name, username, email, street, city, zipcode, phone, website, id } =
     currentUser;
+  const userPropsArray = [];
+  for (let prop in currentUser) {
+    userPropsArray.push(prop);
+  }
+
   return (
     <Formik
       initialValues={{
@@ -75,7 +80,7 @@ const FormUser: FC = () => {
       onSubmit={(values) => console.log(JSON.stringify(values, null, 2))}
     >
       <Form className="form">
-        <MyTextInput label="Имя" id="name" name="name" type="text" />
+        <MyTextInput label="Имя" id="name" name="name" type="text" disabled />
         <MyTextInput
           label="User name"
           id="username"

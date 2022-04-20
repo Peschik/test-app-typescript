@@ -2,7 +2,7 @@ import Page from "./components/pages/PageList/Page";
 import UsersList from "./components/usersList/UsersList";
 import PageProfile from "./components/pages/PageProfile/PageProfile";
 import useUsersService from "./components/services/useUsersService";
-import { useEffect, useState, FC } from "react";
+import { useEffect, useState, FC, useReducer } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AppFilters from "./components/app-filters/AppFilters";
 import { Row, Col } from "react-bootstrap";
@@ -10,31 +10,47 @@ import { Row, Col } from "react-bootstrap";
 import { UserContext } from "./components/contexts/UserContext";
 import { AllUsersContext } from "./components/contexts/AllUsersContext";
 import { IUser } from "./types/types";
+import { usersReducer } from "./reducers/UsersReducer";
+import { setAllUsers, setActiveSort, setActiveId } from "./actions/actions";
 
 export const App: FC = () => {
   const { getAllUsers } = useUsersService();
-  const [usersList, setUsersList] = useState<IUser[]>([]);
-  const [sortBy, setSortBy] = useState<string>("name");
-  const [currentId, setCurrentId] = useState<number>();
+  // const [usersList, setUsersList] = useState<IUser[]>([]);
+  // const [sortBy, setSortBy] = useState<string>("name");
+  // const [currentId, setCurrentId] = useState<number>();
+
+  const [{ usersList, sortBy, activeId }, dispatch] = useReducer(usersReducer, {
+    usersList: [],
+    sortBy: "",
+    edit: false,
+    activeId: null,
+  });
 
   useEffect(() => {
     onRequest();
   }, []);
 
-  useEffect(() => {
-    sortPost(usersList, sortBy);
-  }, [sortBy]);
-
   const onRequest = () => {
-    getAllUsers().then(onUsersListLoaded);
+    getAllUsers()
+      .then(onUsersListLoaded)
+      .catch((error) => console.log(error));
   };
 
-  const sortPost = (items: IUser[], sortBy: string) => {
-    setUsersList(sortArray(items, sortBy));
+  const onUsersListLoaded = (usersList: IUser[]) => {
+    dispatch(setAllUsers(usersList));
   };
+
+  // useEffect(() => {
+  //   sortPost(usersList, sortBy);
+  // }, [sortBy]);
+  // const sortPost = (items: IUser[], sortBy: string) => {
+  //   setUsersList(sortArray(items, sortBy));
+  // };
 
   const onSortSelect = (sortName: string) => {
-    sortName !== sortBy ? setSortBy(sortName) : setSortBy("name");
+    sortName !== sortBy
+      ? dispatch(setActiveSort(sortName))
+      : dispatch(setActiveSort("name"));
   };
 
   const sortArray = (
@@ -50,13 +66,13 @@ export const App: FC = () => {
     return sortedList;
   };
 
-  const onUsersListLoaded = (usersList: IUser[]) => setUsersList(usersList);
-
   const onMoreSelect = (gotId: number) => {
-    setCurrentId(gotId);
+    dispatch(setActiveId(gotId));
   };
 
-  const currentUser: IUser = usersList.find((item) => item.id === currentId);
+  const currentUser: IUser = usersList.find(
+    (item: IUser) => item.id === activeId
+  );
   const sortedUsers = sortArray(usersList, sortBy);
 
   return (
@@ -78,7 +94,6 @@ export const App: FC = () => {
                 path="/user"
                 element={<Page content={<PageProfile />} />}
               ></Route>
-              <Route path="/test" element={<h1>sdfwrgfrewge</h1>}></Route>
             </Routes>
           </UserContext.Provider>
         </AllUsersContext.Provider>

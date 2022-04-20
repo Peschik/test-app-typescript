@@ -1,7 +1,7 @@
 import { IUser } from "../types/types";
-
+import { useReducer } from "react";
 interface IState {
-  usersList: IUser[];
+  usersList: IUser[] | undefined;
   activeId: number;
   sortBy: string;
   edit: boolean;
@@ -12,17 +12,10 @@ interface IAction {
   payload: any;
 }
 
-const initialState: IState = {
-  usersList: [],
-  activeId: null,
-  sortBy: "name",
-  edit: false,
-};
-
 export const GET_ALL_USERS = "GET_ALL_USERS";
 export const SET_ACTIVE_ID = "SET_ACTIVE_ID";
 export const SET_ACTIVE_SORT = "SET_ACTIVE_SORT";
-const usersReducer = (state: IState = initialState, action: IAction) => {
+export const usersReducer = (state: IState, action: IAction) => {
   switch (action.type) {
     case GET_ALL_USERS:
       return { ...state, usersList: action.payload };
@@ -34,5 +27,3 @@ const usersReducer = (state: IState = initialState, action: IAction) => {
       return state;
   }
 };
-
-export default usersReducer;

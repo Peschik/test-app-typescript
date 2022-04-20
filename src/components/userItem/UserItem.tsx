@@ -1,19 +1,9 @@
 import { NavLink } from "react-router-dom";
-const UserItem = (props) => {
-  const { id, name, city, company } = props;
-  return (
-    <li
-      tabIndex={0}
-      className={"user-item"}
 
-      // onClick={() => {props.onCharSelected(item.id)}}
-      // onKeyPress= {(e) => {
-      //     e.preventDefault()
-      //     if (e.key === ' ' || e.key === 'Enter') {
-      //         props.onCharSelected(item.id);
-      //     }
-      // }}
-    >
+const UserItem = ({ userProps, onMoreSelect }) => {
+  const { id, name, city, company } = userProps;
+  return (
+    <li tabIndex={0} className={"user-item"}>
       <p>
         <span>ФИО:</span>
         {name}
@@ -27,7 +17,7 @@ const UserItem = (props) => {
           <span>компания:</span>
           {company}
         </p>
-        <NavLink to="/user" onClick={() => props.onMoreSelect(id)}>
+        <NavLink to="/user" onClick={() => onMoreSelect(id)}>
           Подробнее
         </NavLink>
       </div>

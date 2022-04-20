@@ -5,7 +5,7 @@ import {
 } from "../reducers/UsersReducer";
 import { IUser } from "../types/types";
 
-export const getAllUsers = (users: IUser[]) => {
+export const setAllUsers = (users: IUser[]) => {
   return {
     type: GET_ALL_USERS,
     payload: users,
