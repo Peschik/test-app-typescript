@@ -25,7 +25,7 @@ export const usersReducer = (state: IState, action: IAction) => {
     case SET_ACTIVE_SORT:
       return { ...state, sortBy: action.payload };
     case EDIT_USER:
-      return { ...state, edit: action.payload };
+      return { ...state, edit: true };
     default:
       return state;
   }

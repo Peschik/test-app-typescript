@@ -44,8 +44,12 @@ const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
 };
 
 const FormUser: FC = () => {
+  // сделать поиск отсюда
+
   const edit = useContext(EditContext);
   const currentUser = useContext(UserContext);
+
+  localStorage.setItem("user", JSON.stringify(currentUser));
 
   const btnRef = useRef<HTMLButtonElement>();
   if (edit) {
@@ -95,8 +99,8 @@ const FormUser: FC = () => {
           .required("Обязательное поле")
           .min(3, "Минимум 3 символа"),
         zipcode: Yup.string().min(
-          6,
-          "Зипкод должен состоять минимум из 6 цифр"
+          5,
+          "Зипкод должен состоять минимум из 5 цифр"
         ),
         phone: Yup.string()
           .min(6, "Телефон должен состоять минимум из 6 цифр")

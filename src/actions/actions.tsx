@@ -24,9 +24,8 @@ export const setActiveId = (activeId: number) => {
     payload: activeId,
   };
 };
-export const editUser = (editUser: boolean) => {
+export const editUser = () => {
   return {
     type: EDIT_USER,
-    payload: editUser,
   };
 };

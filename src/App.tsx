@@ -49,13 +49,6 @@ export const App: FC = () => {
     dispatch(setAllUsers(usersList));
   };
 
-  // useEffect(() => {
-  //   sortPost(usersList, sortBy);
-  // }, [sortBy]);
-  // const sortPost = (items: IUser[], sortBy: string) => {
-  //   setUsersList(sortArray(items, sortBy));
-  // };
-
   const onSortSelect = (sortName: string) => {
     sortName !== sortBy
       ? dispatch(setActiveSort(sortName))
@@ -63,7 +56,7 @@ export const App: FC = () => {
   };
 
   const onEditSelect = () => {
-    dispatch(editUser(true));
+    dispatch(editUser());
   };
 
   const sortArray = (
@@ -88,6 +81,9 @@ export const App: FC = () => {
   );
   const sortedUsers = sortArray(usersList, sortBy);
 
+  // посмотреть возможности перенести функционал по сортировке, объединение провайдеров
+  //реализовать блокирование редактирования
+
   return (
     <Router>
       <Row>
@@ -102,7 +98,7 @@ export const App: FC = () => {
             }
           ></Route>
           <Route
-            path="/user"
+            path="/user/:id"
             element={
               <UserContext.Provider value={currentUser}>
                 <EditContext.Provider value={edit} />

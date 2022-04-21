@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const UserItem = ({ userProps, onMoreSelect }) => {
   const { id, name, city, company } = userProps;
@@ -17,9 +17,9 @@ const UserItem = ({ userProps, onMoreSelect }) => {
           <span>компания:</span>
           {company}
         </p>
-        <NavLink to="/user" onClick={() => onMoreSelect(id)}>
+        <Link to={`/user/${id}`} onClick={() => onMoreSelect(id)}>
           Подробнее
-        </NavLink>
+        </Link>
       </div>
     </li>
   );
