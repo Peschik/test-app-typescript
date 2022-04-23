@@ -9,8 +9,8 @@ interface AppSorterProps {
   onSortSelect: (sortName: string) => void;
 }
 const buttons: IButton[] = [
-  { name: "city", label: "По городу" },
-  { name: "company", label: "По компании" },
+  { name: "address.city", label: "По городу" },
+  { name: "company.name", label: "По компании" },
 ];
 
 const AppSorters: FC<AppSorterProps> = ({ onSortSelect }) => {

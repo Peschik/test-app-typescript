@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const UserItem = ({ userProps, onMoreSelect }) => {
-  const { id, name, city, company } = userProps;
+  const { id, name, address, company } = userProps;
   return (
     <li tabIndex={0} className={"user-item"}>
       <p>
@@ -10,12 +10,12 @@ const UserItem = ({ userProps, onMoreSelect }) => {
       </p>
       <p>
         <span>город:</span>
-        {city}
+        {address.city}
       </p>
       <div className="card-bottom">
         <p>
           <span>компания:</span>
-          {company}
+          {company.name}
         </p>
         <Link to={`/user/${id}`} onClick={() => onMoreSelect(id)}>
           Подробнее

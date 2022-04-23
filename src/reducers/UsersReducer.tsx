@@ -1,7 +1,7 @@
 import { act } from "react-dom/test-utils";
-import { IUser } from "../types/types";
+import { IUserCard } from "../types/types";
 interface IState {
-  usersList: IUser[] | undefined;
+  usersList: IUserCard | undefined;
   activeId: number;
   sortBy: string;
   edit: boolean;

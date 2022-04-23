@@ -3,10 +3,11 @@ import * as Yup from "yup";
 import { FC, useRef } from "react";
 import { Button } from "react-bootstrap";
 import "./formUser.scss";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { EditContext } from "../contexts/EditContext";
-
+import { useSearchParams, useLocation } from "react-router-dom";
+import useUsersService from "../services/useUsersService";
+import { object } from "yup/lib/locale";
 interface MyTextInputProps {
   name: string;
   label: string;
@@ -15,9 +16,8 @@ interface MyTextInputProps {
 }
 
 const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
-  const edit = useContext(EditContext);
+  const edit = useContext(UserContext);
   const [field, meta] = useField(props);
-
   const inputRef = useRef<HTMLInputElement>();
 
   if (edit) {
@@ -46,10 +46,25 @@ const MyTextInput: FC<MyTextInputProps> = ({ label, ...props }) => {
 const FormUser: FC = () => {
   // сделать поиск отсюда
 
-  const edit = useContext(EditContext);
-  const currentUser = useContext(UserContext);
+  const { getUser } = useUsersService();
 
-  localStorage.setItem("user", JSON.stringify(currentUser));
+  const [currentUser, setCurrentUser] = useState(null);
+  const edit = useContext(UserContext);
+  const location = useLocation();
+  const linkTo = +location.pathname.slice(-1);
+  useEffect(() => {
+    onRequest();
+  }, []);
+
+  const onRequest = () => {
+    getUser(linkTo)
+      .then(onUserLoaded)
+      .catch((error) => console.log(error));
+  };
+
+  const onUserLoaded = async (user: any) => {
+    setCurrentUser(user);
+  };
 
   const btnRef = useRef<HTMLButtonElement>();
   if (edit) {
@@ -57,12 +72,18 @@ const FormUser: FC = () => {
     btnRef.current?.classList.add("btn_ready");
   }
 
+  if (!currentUser) {
+    return <h1>Loading</h1>;
+  }
+
   const userPropsArray = Object.entries(currentUser);
   const userDataArray = Object.keys(currentUser);
-
   const renderItems = (arr: string[]) => {
     return arr.map((item) => {
       if (item === "id") return;
+      if (typeof item === "object") {
+        console.log("+");
+      }
       return (
         <MyTextInput
           key={item + "Input"}
@@ -79,8 +100,20 @@ const FormUser: FC = () => {
   return (
     <Formik
       initialValues={userPropsArray.reduce((object, [property, value]) => {
-        object[property] = value;
-        return object;
+        if (typeof value === "object") {
+          Object.entries(value).forEach((item) => {
+            console.log(item);
+            let propOfEntry = item[0];
+            let valueOfEntry = item[1];
+            if (!object.hasOwnProperty(propOfEntry)) {
+              object[propOfEntry] = valueOfEntry;
+            }
+          });
+          return object;
+        } else {
+          object[property] = value;
+          return object;
+        }
       }, {})}
       validationSchema={Yup.object({
         name: Yup.string()

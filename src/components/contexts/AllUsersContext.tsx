@@ -1,4 +1,9 @@
 import { createContext } from "react";
-import { IUser } from "../../types/types";
+import { IUserCard } from "../../types/types";
 
-export const AllUsersContext = createContext<IUser[]>(null);
+type UsersContextData = {
+  sortedUsers: IUserCard[];
+  sortBy: string;
+};
+
+export const AllUsersContext = createContext<UsersContextData>(null);

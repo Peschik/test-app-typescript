@@ -5,14 +5,23 @@ export interface IButton {
 export interface IUserCard {
   id: number;
   name: string;
-  city: string;
-  company: string;
+  address: IReducedAddress;
+  company: ICompany;
 }
 export interface IUser extends IUserCard {
   username: string;
   email: string;
-  street: string;
-  zipcode: string;
+  address: IFullAddress;
   phone: string;
   website: string;
+}
+export interface IReducedAddress {
+  city: string;
+}
+export interface IFullAddress extends IReducedAddress {
+  street: string;
+  zipcode: string;
+}
+export interface ICompany {
+  name: string;
 }

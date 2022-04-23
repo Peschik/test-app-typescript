@@ -4,9 +4,9 @@ import {
   SET_ACTIVE_ID,
   EDIT_USER,
 } from "../reducers/UsersReducer";
-import { IUser } from "../types/types";
+import { IUserCard } from "../types/types";
 
-export const setAllUsers = (users: IUser[]) => {
+export const setAllUsers = (users: IUserCard[]) => {
   return {
     type: GET_ALL_USERS,
     payload: users,

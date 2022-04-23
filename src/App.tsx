@@ -9,8 +9,7 @@ import { Row, Col } from "react-bootstrap";
 
 import { UserContext } from "./components/contexts/UserContext";
 import { AllUsersContext } from "./components/contexts/AllUsersContext";
-import { EditContext } from "./components/contexts/EditContext";
-import { IUser } from "./types/types";
+import { IUserCard } from "./types/types";
 import { usersReducer } from "./reducers/UsersReducer";
 import {
   setAllUsers,
@@ -21,15 +20,12 @@ import {
 
 export const App: FC = () => {
   const { getAllUsers } = useUsersService();
-  // const [usersList, setUsersList] = useState<IUser[]>([]);
-  // const [sortBy, setSortBy] = useState<string>("name");
-  // const [currentId, setCurrentId] = useState<number>();
 
   const [{ usersList, sortBy, activeId, edit }, dispatch] = useReducer(
     usersReducer,
     {
       usersList: [],
-      sortBy: "",
+      sortBy: "name",
       edit: false,
       activeId: null,
     }
@@ -45,7 +41,7 @@ export const App: FC = () => {
       .catch((error) => console.log(error));
   };
 
-  const onUsersListLoaded = (usersList: IUser[]) => {
+  const onUsersListLoaded = (usersList: IUserCard[]) => {
     dispatch(setAllUsers(usersList));
   };
 
@@ -59,30 +55,43 @@ export const App: FC = () => {
     dispatch(editUser());
   };
 
-  const sortArray = (
-    arr: IUser[],
-    sortBy: IUser["name"] | IUser["city"] | IUser["company"]
-  ) => {
-    const sortedList = arr.sort((a, b) => {
-      if (a[sortBy] > b[sortBy]) {
-        return 1;
-      }
-      return -1;
-    });
-    return sortedList;
-  };
-
   const onMoreSelect = (gotId: number) => {
     dispatch(setActiveId(gotId));
   };
 
-  const currentUser: IUser = usersList.find(
-    (item: IUser) => item.id === activeId
+  const currentUser: IUserCard = usersList.find(
+    (item: IUserCard) => item.id === activeId
   );
+
+  const sortArray = (arr: IUserCard[], sortBy: any) => {
+    const sortedArray = arr.sort((a, b) => {
+      const subSort = sortBy.split(".");
+      let firstToSort = a;
+      let secondToSort = b;
+      for (let propOfObj of subSort) {
+        firstToSort = firstToSort[propOfObj];
+        secondToSort = secondToSort[propOfObj];
+      }
+      if (firstToSort > secondToSort) {
+        return 1;
+      }
+      return -1;
+    });
+    return sortedArray;
+  };
+
   const sortedUsers = sortArray(usersList, sortBy);
 
-  // посмотреть возможности перенести функционал по сортировке, объединение провайдеров
-  //реализовать блокирование редактирования
+  const providingAllUsers = {
+    sortedUsers,
+    sortBy,
+  };
+
+  const providingEdit = {
+    edit,
+  };
+
+  // посмотреть возможности перенести функционал по сортировке
 
   return (
     <Router>
@@ -92,7 +101,7 @@ export const App: FC = () => {
           <Route
             path="/"
             element={
-              <AllUsersContext.Provider value={sortedUsers}>
+              <AllUsersContext.Provider value={providingAllUsers}>
                 <Page content={<UsersList onMoreSelect={onMoreSelect} />} />
               </AllUsersContext.Provider>
             }
@@ -100,8 +109,7 @@ export const App: FC = () => {
           <Route
             path="/user/:id"
             element={
-              <UserContext.Provider value={currentUser}>
-                <EditContext.Provider value={edit} />
+              <UserContext.Provider value={edit}>
                 <Page content={<PageProfile onEditSelect={onEditSelect} />} />
               </UserContext.Provider>
             }
