@@ -2,13 +2,16 @@ export interface IButton {
   name: string;
   label: string;
 }
-export interface IUserCard {
+
+interface IUserAbstract {
   id: number;
   name: string;
+}
+export interface IUserCard extends IUserAbstract {
   address: IReducedAddress;
   company: ICompany;
 }
-export interface IUser extends IUserCard {
+export interface IUser extends IUserAbstract {
   username: string;
   email: string;
   address: IFullAddress;

@@ -49,6 +49,9 @@ const FormUser: FC = () => {
   const { getUser } = useUsersService();
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [placeholderData, setPlaceHolderData] = useState([]);
+  const [inputsData, setInputsData] = useState([]);
+
   const edit = useContext(UserContext);
   const location = useLocation();
   const linkTo = +location.pathname.slice(-1);
@@ -62,8 +65,51 @@ const FormUser: FC = () => {
       .catch((error) => console.log(error));
   };
 
+  // const createPlaceholderData = (arr) => {
+  //   const result = [];
+  //   arr.map((item) => {
+  //     if (typeof item === "string") {
+  //       placeholderData.push(item);
+  //     } else {
+  //       let value: string;
+  //       for (let insertedValue in item) {
+  //         value = item[insertedValue];
+
+  //         result.push(value);
+  //       }
+  //     }
+  //   });
+  //   return result;
+  // };
+
+  const createInputsData = (arr) => {
+    const result = [];
+
+    arr.map((item) => {
+      const key = item[0];
+      const value = item[1];
+      if (typeof value === "string") {
+        result.push(item);
+        return;
+      }
+      if (typeof value === "object") {
+        for (let insertedValue in value) {
+          result.push([insertedValue, value[insertedValue]]);
+        }
+      }
+    });
+    return result;
+  };
+
   const onUserLoaded = async (user: any) => {
-    setCurrentUser(user);
+    transformToInputs(user);
+  };
+
+  const transformToInputs = (user) => {
+    const userPropsArray = Object.entries(user);
+    const inputs = createInputsData(userPropsArray);
+
+    setInputsData(inputs);
   };
 
   const btnRef = useRef<HTMLButtonElement>();
@@ -72,48 +118,38 @@ const FormUser: FC = () => {
     btnRef.current?.classList.add("btn_ready");
   }
 
-  if (!currentUser) {
-    return <h1>Loading</h1>;
-  }
+  if (inputsData.length === 0) return <h1>Loading</h1>;
 
-  const userPropsArray = Object.entries(currentUser);
-  const userDataArray = Object.keys(currentUser);
-  const renderItems = (arr: string[]) => {
+  // нужно распаковать массив для получения массива плейсхолдеров и названий инпутов
+
+  // const userDataArray = Object.keys(currentUser);
+
+  const renderItems = (arr: any) => {
     return arr.map((item) => {
-      if (item === "id") return;
-      if (typeof item === "object") {
-        console.log("+");
-      }
+      const value = item[0];
+      if (value === "id") return;
+
       return (
         <MyTextInput
-          key={item + "Input"}
-          label={item.slice(0, 1).toUpperCase() + item.slice(1)}
-          name={item}
-          type={item !== "email" ? "text" : "email"}
+          key={value + "Input"}
+          label={value.slice(0, 1).toUpperCase() + value.slice(1)}
+          name={value}
+          type={value !== "email" ? "text" : "email"}
         />
       );
     });
   };
 
-  const elements = renderItems(userDataArray);
+  const elements = renderItems(inputsData);
 
+  console.log(inputsData);
   return (
     <Formik
-      initialValues={userPropsArray.reduce((object, [property, value]) => {
-        if (typeof value === "object") {
-          Object.entries(value).forEach((item) => {
-            console.log(item);
-            let propOfEntry = item[0];
-            let valueOfEntry = item[1];
-            if (!object.hasOwnProperty(propOfEntry)) {
-              object[propOfEntry] = valueOfEntry;
-            }
-          });
-          return object;
-        } else {
-          object[property] = value;
-          return object;
-        }
+      initialValues={inputsData.reduce((object, [property, value]) => {
+        if (property === "id") return;
+        object[property] = value;
+        console.log(object);
+        return object;
       }, {})}
       validationSchema={Yup.object({
         name: Yup.string()

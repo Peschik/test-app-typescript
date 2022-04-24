@@ -18,21 +18,20 @@ export class Company implements ICompany {
 }
 
 export abstract class UserAbstract {
-  company: Company;
-  constructor(public id: number, public name: string, company: Company) {
-    this.company = company;
-  }
+  constructor(public id: number, public name: string) {}
 }
 export class UserCard extends UserAbstract implements IUserCard {
   address: ReducedAddress;
+  company: Company;
   constructor(
     id: number,
     name: string,
     company: ICompany,
     address: ReducedAddress
   ) {
-    super(id, name, company);
+    super(id, name);
     this.address = address;
+    this.company = company;
   }
 }
 export class User extends UserAbstract implements IUser {
@@ -40,14 +39,13 @@ export class User extends UserAbstract implements IUser {
   constructor(
     id: number,
     name: string,
-    company: ICompany,
-    address: FullAddress,
     public username: string,
     public email: string,
+    address: FullAddress,
     public phone: string,
     public website: string
   ) {
-    super(id, name, company);
+    super(id, name);
     this.address = address;
   }
 }

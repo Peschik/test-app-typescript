@@ -20,14 +20,13 @@ const useUsersService = () => {
     return new User(
       user.id,
       user.name,
-      new Company(user.company.name),
+      user.username,
+      user.email,
       new FullAddress(
         user.address.city,
         user.address.zipcode,
         user.address.street
       ),
-      user.username,
-      user.email,
       user.phone,
       user.website
     );
