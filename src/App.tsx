@@ -84,8 +84,6 @@ export const App: FC = () => {
 
   const sortedUsers: IUserCard[] = sortArray(usersList, sortBy);
 
-  // посмотреть возможности перенести функционал по сортировке
-
   return (
     <Router>
       <Row>
