@@ -16,7 +16,7 @@ const useUsersService = () => {
     return _reduceUser(res);
   };
 
-  const _reduceUser = (user: IUser) => {
+  const _reduceUser = (user: IUser): User => {
     return new User(
       user.id,
       user.name,
@@ -34,37 +34,8 @@ const useUsersService = () => {
 
   const _reduceUsers = (user: IUserCard) => {
     return new UserCard(user.id, user.name, user.company, user.address);
-    return {
-      id: user.id,
-      name: user.name,
-      company: {
-        name: user.company.name,
-      },
-      address: {
-        city: user.address.city,
-      },
-    };
   };
 
-  // const _tranformUser = (user: IUser) => {
-  //   return {
-  //     id: user.id,
-  //     name: user.name,
-  //     username: user.username,
-  //     email: user.email,
-  //     phone: user.phone,
-  //     address: {
-  //       city: user.address.city,
-  //       street: user.address.street,
-  //       zipcode: user.address.zipcode,
-  //     },
-  //     company: {
-  //       name: user.company.name,
-  //     },
-
-  //     website: user.website,
-  //   };
-  // };
   return { getAllUsers, getUser };
 };
 export default useUsersService;

@@ -1,13 +1,17 @@
 import "./usersList.scss";
 import UserItem from "../userItem/UserItem";
-import { useContext } from "react";
+import { useContext, FC, ReactNode } from "react";
 import { AllUsersContext } from "../contexts/AllUsersContext";
-import { IUserCard, IReducedAddress } from "../../types/types";
+import { IUserCard } from "../../types/types";
 
-const UsersList = ({ onMoreSelect }) => {
-  const { sortedUsers, sortBy } = useContext(AllUsersContext);
+interface UsersListProps {
+  onMoreSelect: (id: number) => void;
+}
 
-  function renderItems(arr: IUserCard[]) {
+const UsersList: FC<UsersListProps> = ({ onMoreSelect }) => {
+  const sortedUsers: IUserCard[] = useContext(AllUsersContext);
+
+  const renderItems = (arr: IUserCard[]): ReactNode => {
     const items = arr.map((item) => {
       const { id } = item;
       return (
@@ -19,8 +23,8 @@ const UsersList = ({ onMoreSelect }) => {
       );
     });
     return <ul>{items}</ul>;
-  }
-  const items = renderItems(sortedUsers);
+  };
+  const items: ReactNode = renderItems(sortedUsers);
 
   return (
     <div className="list-container">

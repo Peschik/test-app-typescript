@@ -18,6 +18,10 @@ export interface IUser extends IUserAbstract {
   phone: string;
   website: string;
 }
+
+export interface IUserWithMessage extends IUser {
+  text: string;
+}
 export interface IReducedAddress {
   city: string;
 }

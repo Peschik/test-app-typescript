@@ -2,10 +2,10 @@ import Page from "./components/pages/PageList/Page";
 import UsersList from "./components/usersList/UsersList";
 import PageProfile from "./components/pages/PageProfile/PageProfile";
 import useUsersService from "./components/services/useUsersService";
-import { useEffect, FC, useReducer } from "react";
+import { useEffect, FC, useReducer, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppSorters from "./components/app-filters/AppSorters";
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 
 import { UserContext } from "./components/contexts/UserContext";
 import { AllUsersContext } from "./components/contexts/AllUsersContext";
@@ -35,35 +35,37 @@ export const App: FC = () => {
     onRequest();
   }, []);
 
-  const onRequest = () => {
+  const onRequest = (): void => {
     getAllUsers()
       .then(onUsersListLoaded)
       .catch((error) => console.log(error));
   };
 
-  const onUsersListLoaded = (usersList: IUserCard[]) => {
+  const onUsersListLoaded = (usersList: IUserCard[]): void => {
     dispatch(setAllUsers(usersList));
   };
 
-  const onSortSelect = (sortName: string) => {
-    sortName !== sortBy
-      ? dispatch(setActiveSort(sortName))
-      : dispatch(setActiveSort("name"));
-  };
-
-  const onEditSelect = () => {
-    dispatch(editUser());
-  };
-
-  const onMoreSelect = (gotId: number) => {
-    dispatch(setActiveId(gotId));
-  };
-
-  const currentUser: IUserCard = usersList.find(
-    (item: IUserCard) => item.id === activeId
+  const onSortSelect = useCallback(
+    (sortName: string): void => {
+      sortName !== sortBy
+        ? dispatch(setActiveSort(sortName))
+        : dispatch(setActiveSort("name"));
+    },
+    [sortBy]
   );
 
-  const sortArray = (arr: IUserCard[], sortBy: any) => {
+  const onEditSelect = useCallback((): void => {
+    dispatch(editUser());
+  }, [edit]);
+
+  const onMoreSelect = useCallback(
+    (gotId: number): void => {
+      dispatch(setActiveId(gotId));
+    },
+    [activeId]
+  );
+
+  const sortArray = (arr: IUserCard[], sortBy: any): IUserCard[] => {
     const sortedArray = arr.sort((a, b) => {
       const subSort = sortBy.split(".");
       let firstToSort = a;
@@ -80,16 +82,7 @@ export const App: FC = () => {
     return sortedArray;
   };
 
-  const sortedUsers = sortArray(usersList, sortBy);
-
-  const providingAllUsers = {
-    sortedUsers,
-    sortBy,
-  };
-
-  const providingEdit = {
-    edit,
-  };
+  const sortedUsers: IUserCard[] = sortArray(usersList, sortBy);
 
   // посмотреть возможности перенести функционал по сортировке
 
@@ -101,7 +94,7 @@ export const App: FC = () => {
           <Route
             path="/"
             element={
-              <AllUsersContext.Provider value={providingAllUsers}>
+              <AllUsersContext.Provider value={sortedUsers}>
                 <Page content={<UsersList onMoreSelect={onMoreSelect} />} />
               </AllUsersContext.Provider>
             }

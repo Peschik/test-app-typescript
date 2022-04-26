@@ -49,3 +49,18 @@ export class User extends UserAbstract implements IUser {
     this.address = address;
   }
 }
+export class UserWithMessage extends User {
+  constructor(
+    id: number,
+    name: string,
+    username: string,
+    email: string,
+    address: FullAddress,
+    phone: string,
+    website: string,
+    public text:string
+  ) {
+    super(id, name, username, email, address, phone, website);
+    this.text = text
+  }
+}

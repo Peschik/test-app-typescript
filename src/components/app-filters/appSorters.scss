@@ -1,5 +1,5 @@
 .side__panel {
-  background-color: grey;
+  background-color: rgb(51, 51, 66);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,12 +7,13 @@
   min-height: 100%;
   span {
     font-weight: 600;
-    font-size: 12px;
+    font-size: 15px;
     line-height: 14px;
     margin-top: 40px;
+    color: rgb(255, 255, 255);
   }
   button {
-    padding: 5px;
+    padding: 15px;
     font-weight: 600;
     font-size: 14px;
     line-height: 18px;

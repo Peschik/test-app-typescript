@@ -1,10 +1,6 @@
 import { useCallback } from "react";
-import { IUser } from "../../types/types";
 
 export const useHttp = () => {
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState(null);
-
   const request = useCallback(
     async (
       url,
@@ -12,8 +8,6 @@ export const useHttp = () => {
       body = null,
       headers = { "Content-Type": "application/json" }
     ) => {
-      // setLoading(true);
-
       try {
         const response = await fetch(url, { method, body, headers });
 
@@ -23,11 +17,8 @@ export const useHttp = () => {
 
         const data = await response.json();
 
-        // setLoading(false);
         return data;
       } catch (e) {
-        // setLoading(false);
-        // setError(e.message);
         throw e;
       }
     },

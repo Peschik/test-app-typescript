@@ -2,7 +2,7 @@ import "./appSorters.scss";
 import { Button } from "react-bootstrap";
 import goHome from "../../img/home-button.png";
 import { Link } from "react-router-dom";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { IButton } from "../../types/types";
 import { Col } from "react-bootstrap";
 interface AppSorterProps {
@@ -15,7 +15,7 @@ const buttons: IButton[] = [
 
 const AppSorters: FC<AppSorterProps> = ({ onSortSelect }) => {
   const renderItems = (arr: IButton[]) => {
-    return arr.map((item: IButton, index) => {
+    return arr.map((item: IButton, index): ReactNode => {
       const { name, label } = item;
       return (
         <Button
@@ -30,7 +30,7 @@ const AppSorters: FC<AppSorterProps> = ({ onSortSelect }) => {
       );
     });
   };
-  const elements = renderItems(buttons);
+  const elements: ReactNode = renderItems(buttons);
   return (
     <Col sm={4} md={2} lg={2}>
       <div className="side__panel">

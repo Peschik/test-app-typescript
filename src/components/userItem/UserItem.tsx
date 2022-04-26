@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
+import { FC } from "react";
+import { IUserCard } from "../../types/types";
 
-const UserItem = ({ userProps, onMoreSelect }) => {
+interface UserItemProps {
+  userProps: IUserCard;
+  onMoreSelect: (id: number) => void;
+}
+const UserItem: FC<UserItemProps> = ({ userProps, onMoreSelect }) => {
   const { id, name, address, company } = userProps;
   return (
     <li tabIndex={0} className={"user-item"}>
